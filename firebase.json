@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"space-with-nasa","appId":"1:804255131093:android:9af087dd18bd5f3ed5095c","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"space-with-nasa","configurations":{"android":"1:804255131093:android:9af087dd18bd5f3ed5095c","ios":"1:804255131093:ios:1f317fb17a500a79d5095c"}}}}}}
