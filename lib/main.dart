@@ -16,22 +16,15 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Homepage(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-class Homepage extends StatelessWidget {
-  const Homepage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: const Column(
-        children: [LoginScreen()],
+      home: Scaffold(
+        appBar: AppBar(),
+        body: const Column(
+          children: [
+            LoginScreen(),
+          ],
+        ),
       ),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

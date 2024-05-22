@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:astro_voyage/api.dart';
+import 'package:astro_voyage/astro.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -57,29 +58,30 @@ class AstronomyPictureOfTheDayBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: fetchAstronomyPictureOfTheDay(),
-        builder: ((context, snapshot) {
-          if (snapshot.hasData) {
-            final AstronomyPictureOfTheDay astronomyPictureOfTheDay =
-                snapshot.data!;
-            return Column(
-              children: [
-                Image.network(
-                  astronomyPictureOfTheDay.imageUrl,
-                  width: 350,
-                ),
-                Text(
-                  astronomyPictureOfTheDay.title,
-                  style: const TextStyle(
-                      fontSize: 19, color: Color.fromARGB(255, 5, 121, 174)),
-                ),
-              ],
-            );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-          return const CircularProgressIndicator();
-        }));
+      future: fetchAstronomyPictureOfTheDay(),
+      builder: ((context, snapshot) {
+        if (snapshot.hasData) {
+          final AstronomyPictureOfTheDay astronomyPictureOfTheDay =
+              snapshot.data!;
+          return Column(
+            children: [
+              Image.network(
+                astronomyPictureOfTheDay.imageUrl,
+                width: 350,
+              ),
+              Text(
+                astronomyPictureOfTheDay.title,
+                style: const TextStyle(
+                    fontSize: 19, color: Color.fromARGB(255, 5, 121, 174)),
+              ),
+            ],
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        return const CircularProgressIndicator();
+      }),
+    );
   }
 }
 
@@ -88,19 +90,32 @@ class LoginBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Column(
         children: [
-          TextField(
+          const TextField(
             decoration: InputDecoration(
               hintText: 'ID',
             ),
           ),
-          TextField(
+          const TextField(
             decoration: InputDecoration(
               hintText: 'password',
             ),
+          ),
+          TextButton(
+            child: const Text('login'),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const AstroPage();
+                  },
+                ),
+              );
+            },
           )
         ],
       ),
