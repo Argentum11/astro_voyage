@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:astro_voyage/api.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:astro_voyage/api.dart';
 import 'package:astro_voyage/astro.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -69,10 +69,13 @@ class AstronomyPictureOfTheDayBlock extends StatelessWidget {
                 astronomyPictureOfTheDay.imageUrl,
                 width: 350,
               ),
-              Text(
-                astronomyPictureOfTheDay.title,
-                style: const TextStyle(
-                    fontSize: 19, color: Color.fromARGB(255, 5, 121, 174)),
+              Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: Text(
+                  astronomyPictureOfTheDay.title,
+                  style: const TextStyle(
+                      fontSize: 19, color: Color.fromARGB(255, 5, 121, 174)),
+                ),
               ),
             ],
           );

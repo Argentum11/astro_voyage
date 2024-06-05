@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:astro_voyage/space_weather_page.dart';
 
 class AstroPage extends StatefulWidget {
   const AstroPage({super.key});
@@ -9,10 +10,8 @@ class AstroPage extends StatefulWidget {
 
 class _AstroPageState extends State<AstroPage> {
   int _selectedIndex = 0;
-  static const List<Widget> _pageOptions = <Widget>[
-    Text(
-      'Space Weather',
-    ),
+  static final List<Widget> _pageOptions = <Widget>[
+    SpaceWeatherPage(),
     Text(
       'Mars Rover Photos',
     ),
