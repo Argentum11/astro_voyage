@@ -4,6 +4,7 @@ class SpaceWeather {
   String name;
   String abbreviation;
   String description;
+  static const String imageFolder = 'assets/space_weather';
 
   SpaceWeather(this.name, this.abbreviation, this.description);
 }

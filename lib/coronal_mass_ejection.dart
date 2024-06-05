@@ -6,9 +6,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class Spacecraft {
-  final String name;
-
   Spacecraft({required this.name});
+  final String name;
 
   factory Spacecraft.fromJson(Map<String, dynamic> json) {
     return Spacecraft(
@@ -23,31 +22,64 @@ class SpacecraftBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: const Color.fromARGB(255, 218, 218, 218),
-      child: Text(
-        spacecraft.name,
-        style: const TextStyle(
-            fontSize: 12, color: Color.fromARGB(255, 35, 143, 231)),
+    return Padding(
+      padding: const EdgeInsets.only(right: 3),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10.0),
+        child: Container(
+          color: const Color.fromARGB(255, 218, 218, 218),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Text(
+              spacecraft.name,
+              style: const TextStyle(
+                  fontSize: 12, color: Color.fromARGB(255, 35, 143, 231)),
+            ),
+          ),
+        ),
       ),
     );
   }
 }
 
-class SpacecraftColumn extends StatelessWidget {
-  const SpacecraftColumn({super.key, required this.spacecrafts});
+class SpacecraftRow extends StatelessWidget {
+  const SpacecraftRow({super.key, required this.spacecrafts});
   final List<Spacecraft> spacecrafts;
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SpacecraftBlock(spacecraft: spacecrafts[0]),
-        if (spacecrafts.length >= 2)
-          SpacecraftBlock(spacecraft: spacecrafts[1]),
-        if (spacecrafts.length >= 3) SpacecraftBlock(spacecraft: spacecrafts[2])
+        const Text('Observation spacecraft:'),
+        Row(
+          children: [
+            SpacecraftBlock(spacecraft: spacecrafts[0]),
+            if (spacecrafts.length >= 2)
+              SpacecraftBlock(spacecraft: spacecrafts[1]),
+            if (spacecrafts.length >= 3)
+              SpacecraftBlock(spacecraft: spacecrafts[2])
+          ],
+        ),
       ],
     );
+  }
+}
+
+String removeVisibleTo(String longString) {
+  int visibleToIndex = longString.indexOf('visible to');
+  if (visibleToIndex == -1) {
+    return longString;
+  } else {
+    int visibleToSentenceEnd = longString.indexOf('.', visibleToIndex) + 1;
+    int visibleToSentenceStart = 0;
+    for (int i = visibleToIndex - 1; i >= 0; i--) {
+      if (longString[i] == '.') {
+        visibleToSentenceStart = i;
+      }
+    }
+    return longString.substring(0, visibleToSentenceStart) +
+        longString.substring(visibleToSentenceEnd);
   }
 }
 
@@ -55,33 +87,64 @@ class CoronalMassEjection {
   final String date;
   final String note;
   final List<Spacecraft> spacecrafts;
+  final double speed;
 
   CoronalMassEjection(
-      {required this.date, required this.note, required this.spacecrafts});
+      {required this.date,
+      required this.note,
+      required this.spacecrafts,
+      required this.speed});
 
   factory CoronalMassEjection.fromJson(Map<String, dynamic> json) {
     var spacecraftsFromJson = json['instruments'] as List;
     List<Spacecraft> spacecraftList =
         spacecraftsFromJson.map((i) => Spacecraft.fromJson(i)).toList();
     String iso8601FormatDatetime = json['startTime'];
+    // speed
+    var cmeAnalysesJson = json['cmeAnalyses'] as List;
+    List<CMEAnalyses> cmeAnalyses =
+        cmeAnalysesJson.map((i) => CMEAnalyses.fromJson(i)).toList();
+    double speed = 0;
+    for (int i = 0; i < cmeAnalyses.length; i++) {
+      CMEAnalyses cmeAnalysis = cmeAnalyses[i];
+      if (cmeAnalysis.accurate) {
+        speed = cmeAnalysis.speed;
+        break;
+      }
+    }
     return CoronalMassEjection(
-      date: formatDateTime(iso8601FormatDatetime),
-      note: json['note'],
-      spacecrafts: spacecraftList,
-    );
+        date: formatDateTime(iso8601FormatDatetime),
+        note: removeVisibleTo(json['note']),
+        spacecrafts: spacecraftList,
+        speed: speed);
+  }
+}
+
+class CMEAnalyses {
+  const CMEAnalyses({required this.speed, required this.accurate});
+  final double speed;
+  final bool accurate;
+
+  factory CMEAnalyses.fromJson(Map<String, dynamic> json) {
+    return CMEAnalyses(speed: json['speed'], accurate: json['isMostAccurate']);
   }
 }
 
 class CoronalMassEjectionIntroduction extends StatelessWidget {
-  const CoronalMassEjectionIntroduction({super.key});
+  const CoronalMassEjectionIntroduction(
+      {super.key, required this.spaceWeather});
+  final SpaceWeather spaceWeather;
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text('Coronal Mass Ejections',style: TextStyle(fontSize: 30),),
-        Text('Coronal Mass Ejections (CMEs) are large expulsions of plasma and magnetic field from the Sun’s corona. They can eject billions of tons of coronal material and carry an embedded magnetic field (frozen in flux) that is stronger than the background solar wind interplanetary magnetic field (IMF) strength. CMEs travel outward from the Sun at speeds ranging from slower than 250 kilometers per second (km/s) to as fast as near 3000 km/s. The fastest Earth-directed CMEs can reach our planet in as little as 15-18 hours. Slower CMEs can take several days to arrive. They expand in size as they propagate away from the Sun and larger CMEs can reach a size comprising nearly a quarter of the space between Earth and the Sun by the time it reaches our planet')
+        Image.asset("${SpaceWeather.imageFolder}/CME_full.gif"),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(spaceWeather.description),
+        )
       ],
     );
   }
@@ -113,7 +176,12 @@ class _CoronalMassEjectionState extends State<CoronalMassEjectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(
+          widget.spaceWeather.name,
+          style: const TextStyle(fontSize: 30),
+        ),
+      ),
       body: FutureBuilder(
           future: fetchCoronalMassEjection(),
           builder: ((context, snapshot) {
@@ -122,7 +190,11 @@ class _CoronalMassEjectionState extends State<CoronalMassEjectionPage> {
               return ListView.builder(
                   itemCount: items.length,
                   itemBuilder: (context, index) {
-                    if(index==0) return const CoronalMassEjectionIntroduction();
+                    if (index == 0) {
+                      return CoronalMassEjectionIntroduction(
+                        spaceWeather: widget.spaceWeather,
+                      );
+                    }
                     CoronalMassEjection coronalMassEjection = items[index];
                     return CoronalMassEjectionTile(
                         coronalMassEjection: coronalMassEjection);
@@ -136,35 +208,72 @@ class _CoronalMassEjectionState extends State<CoronalMassEjectionPage> {
   }
 }
 
+class SpeedBlock extends StatelessWidget {
+  const SpeedBlock({super.key, required this.speed});
+  final double speed;
+
+  @override
+  Widget build(BuildContext context) {
+    int displaySpeed = speed.toInt();
+    return Row(
+      children: [
+        const Text('speed: '),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(6),
+          child: Container(
+            color: displaySpeed > 1000
+                ? Colors.red
+                : displaySpeed >= 500
+                    ? Colors.amber
+                    : Colors.green,
+            width: 40,
+            height: 25,
+            child: Center(
+              child: Text(
+                displaySpeed.toString(),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
 class CoronalMassEjectionTile extends StatelessWidget {
   const CoronalMassEjectionTile({super.key, required this.coronalMassEjection});
   final CoronalMassEjection coronalMassEjection;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 7),
-      child: Row(
-        children: [
-          const SizedBox(
-            width: 5,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(coronalMassEjection.date),
-              SpacecraftColumn(spacecrafts: coronalMassEjection.spacecrafts)
-            ],
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          Expanded(
-              child: Text(
-            coronalMassEjection.note,
-            maxLines: 5,
-          ))
-        ],
+    return Card(
+      color: const Color.fromARGB(255, 230, 189, 186),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  coronalMassEjection.date,
+                  style: const TextStyle(
+                      color: Color.fromARGB(192, 239, 86, 20), fontSize: 20),
+                ),
+                SpeedBlock(speed: coronalMassEjection.speed)
+              ],
+            ),
+            SpacecraftRow(spacecrafts: coronalMassEjection.spacecrafts),
+            const SizedBox(
+              height: 6,
+            ),
+            Text(
+              coronalMassEjection.note,
+              maxLines: 5,
+            )
+          ],
+        ),
       ),
     );
   }

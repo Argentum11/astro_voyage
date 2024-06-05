@@ -12,7 +12,7 @@ class SpaceWeatherTile extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Image.asset(
-          'assets/${spaceWeather.abbreviation}_small.jpeg',
+          '${SpaceWeather.imageFolder}/${spaceWeather.abbreviation}_small.jpeg',
           width: 150,
         ),
         Text(
@@ -32,7 +32,7 @@ class SpaceWeatherPage extends StatelessWidget {
 
   final List<SpaceWeather> spaceWeathers = [
     SpaceWeather('Coronal Mass Ejection', 'CME',
-        'Coronal mass ejection (CME), large eruption of magnetized plasma from the Sun’s outer atmosphere, or corona, that propagates outward into interplanetary space. The CME is one of the main transient features of the Sun. Although it is known to be formed by explosive reconfigurations of solar magnetic fields through the process of magnetic reconnection, its exact formation mechanism is not yet understood.')
+        'Coronal Mass Ejections (CMEs) are large expulsions of plasma and magnetic field from the Sun’s corona. They can eject billions of tons of coronal material and carry an embedded magnetic field (frozen in flux) that is stronger than the background solar wind interplanetary magnetic field (IMF) strength. CMEs travel outward from the Sun at speeds ranging from slower than 250 kilometers per second (km/s) to as fast as near 3000 km/s. The fastest Earth-directed CMEs can reach our planet in as little as 15-18 hours. Slower CMEs can take several days to arrive. They expand in size as they propagate away from the Sun and larger CMEs can reach a size comprising nearly a quarter of the space between Earth and the Sun by the time it reaches our planet')
   ];
 
   @override
