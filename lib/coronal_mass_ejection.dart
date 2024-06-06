@@ -130,25 +130,7 @@ class CMEAnalyses {
   }
 }
 
-class CoronalMassEjectionIntroduction extends StatelessWidget {
-  const CoronalMassEjectionIntroduction(
-      {super.key, required this.spaceWeather});
-  final SpaceWeather spaceWeather;
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image.asset("${SpaceWeather.imageFolder}/CME_full.gif"),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(spaceWeather.description),
-        )
-      ],
-    );
-  }
-}
 
 class CoronalMassEjectionPage extends StatefulWidget {
   const CoronalMassEjectionPage({super.key, required this.spaceWeather});
@@ -177,11 +159,9 @@ class _CoronalMassEjectionState extends State<CoronalMassEjectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.spaceWeather.name,
-          style: const TextStyle(fontSize: 30),
-        ),
-      ),
+          title: SpaceWeatherTitle(
+        spaceWeather: widget.spaceWeather,
+      )),
       body: FutureBuilder(
           future: fetchCoronalMassEjection(),
           builder: ((context, snapshot) {
@@ -191,7 +171,7 @@ class _CoronalMassEjectionState extends State<CoronalMassEjectionPage> {
                   itemCount: items.length,
                   itemBuilder: (context, index) {
                     if (index == 0) {
-                      return CoronalMassEjectionIntroduction(
+                      return SpaceWeatherIntroduction(
                         spaceWeather: widget.spaceWeather,
                       );
                     }
