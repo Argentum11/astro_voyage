@@ -84,13 +84,13 @@ String removeVisibleTo(String longString) {
 }
 
 class CoronalMassEjection {
-  final String date;
+  final String dateTime;
   final String note;
   final List<Spacecraft> spacecrafts;
   final double speed;
 
   CoronalMassEjection(
-      {required this.date,
+      {required this.dateTime,
       required this.note,
       required this.spacecrafts,
       required this.speed});
@@ -113,7 +113,7 @@ class CoronalMassEjection {
       }
     }
     return CoronalMassEjection(
-        date: formatDateTime(iso8601FormatDatetime),
+        dateTime: formatDateTime(iso8601FormatDatetime),
         note: removeVisibleTo(json['note']),
         spacecrafts: spacecraftList,
         speed: speed);
@@ -129,8 +129,6 @@ class CMEAnalyses {
     return CMEAnalyses(speed: json['speed'], accurate: json['isMostAccurate']);
   }
 }
-
-
 
 class CoronalMassEjectionPage extends StatefulWidget {
   const CoronalMassEjectionPage({super.key, required this.spaceWeather});
@@ -236,10 +234,8 @@ class CoronalMassEjectionTile extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  coronalMassEjection.date,
-                  style: const TextStyle(
-                      color: Color.fromARGB(192, 239, 86, 20), fontSize: 20),
+                SpaceWeatherDateTimeBlock(
+                  dateTime: coronalMassEjection.dateTime,
                 ),
                 SpeedBlock(speed: coronalMassEjection.speed)
               ],

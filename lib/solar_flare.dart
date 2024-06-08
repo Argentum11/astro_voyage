@@ -21,7 +21,7 @@ class SolarFlare {
 
     return SolarFlare(
         dateTime: formatDateTime(iso8601FormatDatetime),
-        type: json['classType'],
+        type: json['classType'][0],
         location: json['sourceLocation'],
         description: json['note']);
   }
@@ -38,8 +38,8 @@ class SolarFlarePage extends StatefulWidget {
 class _SolarFlarePageState extends State<SolarFlarePage> {
   Future<List<SolarFlare>> fetchSolarFlare() async {
     String nasaApiKey = await getNasaApiKey();
-    var response = await http.get(Uri.parse(
-        'https://api.nasa.gov/DONKI/FLR?api_key=$nasaApiKey'));
+    var response = await http
+        .get(Uri.parse('https://api.nasa.gov/DONKI/FLR?api_key=$nasaApiKey'));
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body) as List;
       return jsonResponse
@@ -72,8 +72,7 @@ class _SolarFlarePageState extends State<SolarFlarePage> {
                       );
                     }
                     SolarFlare solarFlare = items[index];
-                    return SolarFlareTile(
-                        solarFlare: solarFlare);
+                    return SolarFlareTile(solarFlare: solarFlare);
                   });
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
@@ -90,14 +89,80 @@ class SolarFlareTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [Text(solarFlare.dateTime), Text(solarFlare.type)],
+    String description = solarFlare.description;
+    return Card(color: Color.fromARGB(255, 189, 221, 241),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SpaceWeatherDateTimeBlock(dateTime: solarFlare.dateTime),
+                XRayLevelBlock(level: solarFlare.type)
+              ],
+            ),
+            const SizedBox(height:5),
+            SunlocationBlock(location: solarFlare.location),
+            const SizedBox(height:5),
+            if (description.isNotEmpty) Text(description),
+          ],
         ),
-        Text(solarFlare.location),
-        Text(solarFlare.description)
+      ),
+    );
+  }
+}
+
+class XRayLevelBlock extends StatelessWidget {
+  const XRayLevelBlock({super.key, required this.level});
+  final String level;
+
+  @override
+  Widget build(BuildContext context) {
+    const String A = 'A';
+    const String B = 'B';
+    const String C = 'C';
+    const String M = 'M';
+    Color containerColor;
+    if (level == A) {
+      containerColor = Colors.green;
+    } else if (level == B) {
+      containerColor = const Color.fromARGB(255, 186, 255, 59);
+    } else if (level == C) {
+      containerColor = Colors.yellow;
+    } else if (level == M) {
+      containerColor = Colors.orange;
+    } else {
+      containerColor = Colors.red;
+    }
+
+    return Row(
+      children: [const Text('X-Ray Level:  '),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(7),
+          child: Container(
+            color: containerColor,
+            width: 25,
+            child: Center(
+              child: Text(
+                level,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ),
       ],
     );
+  }
+}
+
+class SunlocationBlock extends StatelessWidget {
+  const SunlocationBlock({super.key, required this.location});
+  final String location;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('location: $location');
   }
 }

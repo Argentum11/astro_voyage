@@ -44,7 +44,7 @@ class SpaceWeatherIntroduction extends StatelessWidget {
               width: 900,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 12, right: 8.0,bottom: 5),
+              padding: const EdgeInsets.only(left: 12, right: 8.0, bottom: 5),
               child: Text(
                 spaceWeather.description,
                 style: const TextStyle(fontSize: 20),
@@ -53,6 +53,20 @@ class SpaceWeatherIntroduction extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class SpaceWeatherDateTimeBlock extends StatelessWidget {
+  const SpaceWeatherDateTimeBlock({super.key, required this.dateTime});
+  final String dateTime;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      dateTime,
+      style: const TextStyle(
+          color: Color.fromARGB(192, 239, 86, 20), fontSize: 20),
     );
   }
 }
