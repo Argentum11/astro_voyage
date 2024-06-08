@@ -151,7 +151,7 @@ class _CoronalMassEjectionState extends State<CoronalMassEjectionPage> {
           .map((objectJson) => CoronalMassEjection.fromJson(objectJson))
           .toList();
     } else {
-      throw Exception('Failed to load name');
+      throw Exception('Failed to load Coronal Mass Ejection');
     }
   }
 
@@ -229,7 +229,7 @@ class CoronalMassEjectionTile extends StatelessWidget {
     return Card(
       color: const Color.fromARGB(255, 230, 189, 186),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

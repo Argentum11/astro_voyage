@@ -23,36 +23,36 @@ class SpaceWeatherTitle extends StatelessWidget {
 }
 
 class SpaceWeatherIntroduction extends StatelessWidget {
-  const SpaceWeatherIntroduction(
-      {super.key, required this.spaceWeather});
+  const SpaceWeatherIntroduction({super.key, required this.spaceWeather});
   final SpaceWeather spaceWeather;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image.asset("${SpaceWeather.imageFolder}/${spaceWeather.abbreviation}.gif"),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(spaceWeather.description),
-        )
-      ],
-    );
-  }
-}
-
-class SpaceWeatherDescription extends StatelessWidget {
-  const SpaceWeatherDescription({super.key, required this.spaceWeather});
-  final SpaceWeather spaceWeather;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(spaceWeather.name),
-        Text(spaceWeather.description),
-      ],
+    const double desiredRadius = 30;
+    return ClipRRect(
+      borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(desiredRadius),
+          bottomRight: Radius.circular(desiredRadius)),
+      child: Container(
+        color: const Color.fromARGB(255, 181, 124, 211),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Image.asset(
+              "${SpaceWeather.imageFolder}/${spaceWeather.abbreviation}.gif",
+              width: 900,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 12, right: 8.0,bottom: 5),
+              child: Text(
+                spaceWeather.description,
+                style: const TextStyle(fontSize: 20),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
