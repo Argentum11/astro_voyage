@@ -90,7 +90,7 @@ class SolarFlareTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String description = solarFlare.description;
-    return Card(color: Color.fromARGB(255, 189, 221, 241),
+    return Card(color: const Color.fromARGB(255, 189, 221, 241),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
         child: Column(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:astro_voyage/space_weather_page.dart';
+import 'package:astro_voyage/nasa_library_search_page.dart';
 
 class AstroPage extends StatefulWidget {
   const AstroPage({super.key});
@@ -13,11 +14,9 @@ class _AstroPageState extends State<AstroPage> {
   static final List<Widget> _pageOptions = <Widget>[
     SpaceWeatherPage(),
     Text(
-      'Mars Rover Photos',
-    ),
-    Text(
       'NASA images',
-    )
+    ),
+    const NasaLibrarySearchPage(),
   ];
 
   void changeTab(int index) {
