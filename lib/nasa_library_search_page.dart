@@ -12,7 +12,7 @@ class NasaLibrarySearchPage extends StatefulWidget {
 class _NasaLibrarySearchPageState extends State<NasaLibrarySearchPage> {
   final TextEditingController _searchTextController = TextEditingController();
   String _searchText = "";
-  Future<SearchResultCollection> fetchCoronalMassEjection() async {
+  Future<SearchResultCollection> fetchSearchResult() async {
     var response = await http
         .get(Uri.parse('https://images-api.nasa.gov/search?q=$_searchText'));
     if (response.statusCode == 200) {
@@ -48,7 +48,7 @@ class _NasaLibrarySearchPageState extends State<NasaLibrarySearchPage> {
               automaticallyImplyLeading: false,
             ),
             FutureBuilder(
-              future: fetchCoronalMassEjection(),
+              future: fetchSearchResult(),
               builder: ((context, snapshot) {
                 if (snapshot.hasData) {
                   var apiData = snapshot.data!;
