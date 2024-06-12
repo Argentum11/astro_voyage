@@ -1,3 +1,4 @@
+import 'package:astro_voyage/status.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -78,8 +79,10 @@ class _NasaLibrarySearchPageState extends State<NasaLibrarySearchPage> {
                   return SliverToBoxAdapter(
                       child: Text('Error: ${snapshot.error}'));
                 }
-                return const SliverToBoxAdapter(
-                    child: Center(child: CircularProgressIndicator()));
+                return SliverToBoxAdapter(
+                  child: CircularProgressWithTitle(
+                      title: 'Searching for $_searchText'),
+                );
               }),
             ),
           ],
@@ -258,14 +261,3 @@ class MediaIcon extends StatelessWidget {
                 : Text(mediaType);
   }
 }
-
-
-
-
-// Media getMedia(String name) {
-//   if (name == 'video') {
-//     return video;
-//   } else {
-//     return image;
-//   }
-// }

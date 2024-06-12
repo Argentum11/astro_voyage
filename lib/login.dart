@@ -4,6 +4,7 @@ import 'package:astro_voyage/api.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:astro_voyage/astro.dart';
+import 'package:astro_voyage/status.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -83,7 +84,9 @@ class AstronomyPictureOfTheDayBlock extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         }
-        return const CircularProgressIndicator();
+        return const CircularProgressWithTitle(
+          title: 'Fetching Astronomy Picture of the Day',
+        );
       }),
     );
   }

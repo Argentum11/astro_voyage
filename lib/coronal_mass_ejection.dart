@@ -4,6 +4,7 @@ import 'package:astro_voyage/api.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:astro_voyage/date_time.dart';
+import 'package:astro_voyage/status.dart';
 
 class Spacecraft {
   Spacecraft({required this.name});
@@ -163,28 +164,31 @@ class _CoronalMassEjectionState extends State<CoronalMassEjectionPage> {
       ),
       body: FutureBuilder(
         future: fetchCoronalMassEjection(),
-        builder: (
-          (context, snapshot) {
-            if (snapshot.hasData) {
-              var items = snapshot.data!;
-              return ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return SpaceWeatherIntroduction(
-                      spaceWeather: widget.spaceWeather,
-                    );
-                  }
-                  CoronalMassEjection coronalMassEjection = items[index];
-                  return CoronalMassEjectionTile(
-                      coronalMassEjection: coronalMassEjection);
-                },
-              );
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            }
-            return const Center(child: CircularProgressIndicator());
-          }),
+        builder: ((context, snapshot) {
+          if (snapshot.hasData) {
+            var items = snapshot.data!;
+            return ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return SpaceWeatherIntroduction(
+                    spaceWeather: widget.spaceWeather,
+                  );
+                }
+                CoronalMassEjection coronalMassEjection = items[index];
+                return CoronalMassEjectionTile(
+                    coronalMassEjection: coronalMassEjection);
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+          return const Center(
+            child: CircularProgressWithTitle(
+              title: 'Fetching Coronal Mass Ejections',
+            ),
+          );
+        }),
       ),
     );
   }

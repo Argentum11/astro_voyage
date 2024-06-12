@@ -1,4 +1,5 @@
 import 'package:astro_voyage/space_weather.dart';
+import 'package:astro_voyage/status.dart';
 import 'package:flutter/material.dart';
 import 'package:astro_voyage/api.dart';
 import 'package:http/http.dart' as http;
@@ -77,7 +78,9 @@ class _SolarFlarePageState extends State<SolarFlarePage> {
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             }
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+                child:
+                    CircularProgressWithTitle(title: 'Fetching Solar Flares'));
           }),
     );
   }
@@ -90,7 +93,8 @@ class SolarFlareTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String description = solarFlare.description;
-    return Card(color: const Color.fromARGB(255, 189, 221, 241),
+    return Card(
+      color: const Color.fromARGB(255, 189, 221, 241),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
         child: Column(
@@ -103,9 +107,9 @@ class SolarFlareTile extends StatelessWidget {
                 XRayLevelBlock(level: solarFlare.type)
               ],
             ),
-            const SizedBox(height:5),
+            const SizedBox(height: 5),
             SunlocationBlock(location: solarFlare.location),
-            const SizedBox(height:5),
+            const SizedBox(height: 5),
             if (description.isNotEmpty) Text(description),
           ],
         ),
@@ -138,7 +142,8 @@ class XRayLevelBlock extends StatelessWidget {
     }
 
     return Row(
-      children: [const Text('X-Ray Level:  '),
+      children: [
+        const Text('X-Ray Level:  '),
         ClipRRect(
           borderRadius: BorderRadius.circular(7),
           child: Container(
@@ -147,7 +152,8 @@ class XRayLevelBlock extends StatelessWidget {
             child: Center(
               child: Text(
                 level,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
           ),
