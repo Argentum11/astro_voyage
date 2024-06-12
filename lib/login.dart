@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:astro_voyage/api.dart';
 import 'package:http/http.dart' as http;
@@ -88,8 +89,23 @@ class AstronomyPictureOfTheDayBlock extends StatelessWidget {
   }
 }
 
-class LoginBlock extends StatelessWidget {
+class LoginBlock extends StatefulWidget {
   const LoginBlock({super.key});
+
+  @override
+  State<LoginBlock> createState() => _LoginBlockState();
+}
+
+class _LoginBlockState extends State<LoginBlock> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,27 +113,74 @@ class LoginBlock extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Column(
         children: [
-          const TextField(
-            decoration: InputDecoration(
-              hintText: 'ID',
+          TextField(
+            controller: _emailController,
+            decoration: const InputDecoration(
+              hintText: 'email',
             ),
           ),
-          const TextField(
-            decoration: InputDecoration(
+          TextField(
+            controller: _passwordController,
+            decoration: const InputDecoration(
               hintText: 'password',
             ),
+            obscureText: true,
           ),
           TextButton(
             child: const Text('login'),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const AstroPage();
-                  },
-                ),
-              );
+            onPressed: () async {
+              final email = _emailController.text.trim();
+              final password = _passwordController.text.trim();
+              try {
+                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: email,
+                  password: password,
+                );
+
+                if (context.mounted) {
+                  // When you use async/await or Futures, your code enters an asynchronous zone,
+                  // meaning it might continue execution even after the widget tree that provided the BuildContext has been disposed of,
+                  // that's why directly access context in this async function (onPressed function for login button)
+                  // without any check might cause errors
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AstroPage(),
+                    ),
+                  );
+                }
+              } on FirebaseAuthException catch (e) {
+                if (context.mounted) {
+                  if (e.code == 'user-not-found') {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            '${e.toString()} No user found for the provided email.($email)'),
+                      ),
+                    );
+                  } else if (e.code == 'wrong-password') {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Wrong password'),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(e.toString()),
+                      ),
+                    );
+                  }
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(e.toString()),
+                    ),
+                  );
+                } // Print any other errors
+              }
             },
           )
         ],

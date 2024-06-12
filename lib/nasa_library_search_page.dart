@@ -193,7 +193,8 @@ class SearchResultItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(color: Color.fromARGB(255, 231, 218, 119),
+    return Card(
+      color: const Color.fromARGB(255, 231, 218, 119),
       child: Column(
         children: [
           if (searchResultItem.previewImageUrl != null)
