@@ -139,8 +139,9 @@ class _LoginBlockState extends State<LoginBlock> {
                   email: email,
                   password: password,
                 );
-
+                
                 if (context.mounted) {
+                  FocusScope.of(context).unfocus();
                   // When you use async/await or Futures, your code enters an asynchronous zone,
                   // meaning it might continue execution even after the widget tree that provided the BuildContext has been disposed of,
                   // that's why directly access context in this async function (onPressed function for login button)

@@ -11,7 +11,9 @@ class NasaLibrarySearchPage extends StatefulWidget {
 }
 
 class _NasaLibrarySearchPageState extends State<NasaLibrarySearchPage> {
+  final _searchFocusNode = FocusNode();
   Future<SearchResultCollection>? futureSearchResults;
+  bool inputFinished = false;
 
   String _searchText = "";
   Future<SearchResultCollection> fetchSearchResult() async {
@@ -45,12 +47,20 @@ class _NasaLibrarySearchPageState extends State<NasaLibrarySearchPage> {
                   return SearchBar(
                     leading: const Icon(Icons.search),
                     controller: controller,
+                    focusNode: _searchFocusNode,
                     hintText: 'Search for data in Nasa library',
                     textInputAction: TextInputAction.search,
                     onSubmitted: (value) {
                       setState(() {
+                        futureSearchResults = null;
                         _searchText = value;
                         futureSearchResults = fetchSearchResult();
+                        inputFinished = true;
+                      });
+                    },
+                    onTap: () {
+                      setState(() {
+                        inputFinished = false;
                       });
                     },
                     onChanged: (value) {
@@ -59,11 +69,12 @@ class _NasaLibrarySearchPageState extends State<NasaLibrarySearchPage> {
                       });
                     },
                     trailing: [
-                      if (_searchText != '')
+                      if (_searchText != '' && !inputFinished)
                         IconButton(
                           icon: const Icon(Icons.close),
                           onPressed: () {
-                            controller.text = ''; // Set text to empty string
+                            controller.text = '';
+                            _searchFocusNode.requestFocus();
                           },
                         )
                     ],
