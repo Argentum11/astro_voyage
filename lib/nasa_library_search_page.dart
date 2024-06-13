@@ -53,6 +53,20 @@ class _NasaLibrarySearchPageState extends State<NasaLibrarySearchPage> {
                         futureSearchResults = fetchSearchResult();
                       });
                     },
+                    onChanged: (value) {
+                      setState(() {
+                        _searchText = value;
+                      });
+                    },
+                    trailing: [
+                      if (_searchText != '')
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            controller.text = ''; // Set text to empty string
+                          },
+                        )
+                    ],
                   );
                 },
                 suggestionsBuilder: (context, controller) {
