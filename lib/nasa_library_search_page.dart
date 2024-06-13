@@ -11,7 +11,8 @@ class NasaLibrarySearchPage extends StatefulWidget {
 }
 
 class _NasaLibrarySearchPageState extends State<NasaLibrarySearchPage> {
-  final TextEditingController _searchTextController = TextEditingController();
+  Future<SearchResultCollection>? futureSearchResults;
+
   String _searchText = "";
   Future<SearchResultCollection> fetchSearchResult() async {
     var response = await http
@@ -38,18 +39,29 @@ class _NasaLibrarySearchPageState extends State<NasaLibrarySearchPage> {
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: CustomScrollView(
           slivers: [
-            SliverAppBar(
-              title: TextField(
-                controller: _searchTextController,
-                onChanged: (text) => setState(() => _searchText = text),
-                decoration: const InputDecoration(
-                  hintText: 'Search...',
-                ),
+            SliverToBoxAdapter(
+              child: SearchAnchor(
+                builder: (context, controller) {
+                  return SearchBar(
+                    leading: const Icon(Icons.search),
+                    controller: controller,
+                    hintText: 'Search for data in Nasa library',
+                    textInputAction: TextInputAction.search,
+                    onSubmitted: (value) {
+                      setState(() {
+                        _searchText = value;
+                        futureSearchResults = fetchSearchResult();
+                      });
+                    },
+                  );
+                },
+                suggestionsBuilder: (context, controller) {
+                  return [];
+                },
               ),
-              automaticallyImplyLeading: false,
             ),
             FutureBuilder(
-              future: fetchSearchResult(),
+              future: futureSearchResults,
               builder: ((context, snapshot) {
                 if (snapshot.hasData) {
                   var apiData = snapshot.data!;
@@ -217,7 +229,10 @@ class SearchResultItemTile extends StatelessWidget {
                   ),
                 ),
               ),
-              MediaIcon(mediaType: searchResultItem.media)
+              MediaIcon(mediaType: searchResultItem.media),
+              const SizedBox(
+                width: 5,
+              )
             ],
           ),
           Padding(

@@ -13,9 +13,9 @@ class _AstroPageState extends State<AstroPage> {
   int _selectedIndex = 0;
   static final List<Widget> _pageOptions = <Widget>[
     SpaceWeatherPage(),
-    Text(
-      'NASA images',
-    ),
+    // Text(
+    //   'NASA images',
+    // ),
     const NasaLibrarySearchPage(),
   ];
 
@@ -34,12 +34,12 @@ class _AstroPageState extends State<AstroPage> {
         items: [
           const BottomNavigationBarItem(
               icon: Icon(Icons.wb_cloudy), label: "Space weather"),
-          BottomNavigationBarItem(
-              icon: Image.asset(
-                '${iconPath}mars.png',
-                width: 25,
-              ),
-              label: "Mars"),
+          // BottomNavigationBarItem(
+          //     icon: Image.asset(
+          //       '${iconPath}mars.png',
+          //       width: 25,
+          //     ),
+          //     label: "Mars"),
           BottomNavigationBarItem(
               icon: Image.asset(
                 '${iconPath}nasa.png',
