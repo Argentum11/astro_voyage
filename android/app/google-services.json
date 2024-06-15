@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "804255131093",
+    "project_id": "space-with-nasa",
+    "storage_bucket": "space-with-nasa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804255131093:android:9af087dd18bd5f3ed5095c",
+        "android_client_info": {
+          "package_name": "com.example.astro_voyage"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCzCPx-HEaBJatugLyFkcWBEm24POLHc4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -11,11 +11,13 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        AstronomyPictureOfTheDayBlock(),
-        LoginBlock(),
-      ],
+    return const SingleChildScrollView(
+      child:  Column(
+        children: [
+          AstronomyPictureOfTheDayBlock(),
+          LoginBlock(),
+        ],
+      ),
     );
   }
 }
@@ -65,21 +67,23 @@ class AstronomyPictureOfTheDayBlock extends StatelessWidget {
         if (snapshot.hasData) {
           final AstronomyPictureOfTheDay astronomyPictureOfTheDay =
               snapshot.data!;
-          return Column(
-            children: [
-              Image.network(
-                astronomyPictureOfTheDay.imageUrl,
-                width: 350,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: Text(
-                  astronomyPictureOfTheDay.title,
-                  style: const TextStyle(
-                      fontSize: 19, color: Color.fromARGB(255, 5, 121, 174)),
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Image.network(
+                  astronomyPictureOfTheDay.imageUrl,
+                  height: 300,
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: Text(
+                    astronomyPictureOfTheDay.title,
+                    style: const TextStyle(
+                        fontSize: 19, color: Color.fromARGB(255, 5, 121, 174)),
+                  ),
+                ),
+              ],
+            ),
           );
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
@@ -171,7 +175,7 @@ class _LoginBlockState extends State<LoginBlock> {
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(e.toString()),
+                        content: Text(e.code.toString()),
                       ),
                     );
                   }
